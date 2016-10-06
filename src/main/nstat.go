@@ -48,9 +48,11 @@ func createEntry(w http.ResponseWriter, r *http.Request, ctx context.Context) {
 	if err := json.NewDecoder(r.Body).Decode(&entry); err == io.EOF {
 		_handleError(w, err, http.StatusBadRequest)
 	}
+	log.Println(entry)
+	entry.Date = time.Now()
 
 	key := datastore.NewIncompleteKey(ctx, "Entry", nil)
-	if _, err := datastore.Put(ctx, key, entry); err != nil {
+	if _, err := datastore.Put(ctx, key, &entry); err != nil {
 		_handleError(w, err, http.StatusInternalServerError)
 	}
 
@@ -58,18 +60,16 @@ func createEntry(w http.ResponseWriter, r *http.Request, ctx context.Context) {
 }
 
 func retreiveEntries(w http.ResponseWriter, r *http.Request, ctx context.Context) {
-	/*if jentries, err := ; err != nil {
+	entries := make([]Entry, 0, 100)
+
+	q := datastore.NewQuery("Entry").Limit(100)
+	if _, err := q.GetAll(ctx, &entries); err != nil {
 		_handleError(w, err, http.StatusInternalServerError)
-	} else {
-		w.WriteHeader(http.StatusOK)
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(jentries)
-	}*/
+	}
 
-	//entries := make([]Entry, 0)
-
-	//q := datastore.NewQuery("Entry")
-	//q.GetAll(ctx, &entries)
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(&entries)
 }
 
 func _handleError(w http.ResponseWriter, err error, status int) {
