@@ -1,7 +1,6 @@
 package nstat
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"encoding/json"
@@ -22,14 +21,9 @@ type Entry struct {
 
 func init() {
 	log.Printf("%q", "Hallo")
-	http.HandleFunc("/", handler)
 	http.HandleFunc("/api/v1/entries", Entries)
-}
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("%q", "handler")
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "Hie")
+	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./web/dist"))))
 }
 
 func Entries(w http.ResponseWriter, r *http.Request) {
