@@ -1,0 +1,20 @@
+{
+  "name": "nstat-web",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "author": "n1k1ch",
+  "license": "ISC",
+  "devDependencies": {
+    "source-map-loader": "^0.1.5",
+    "ts-loader": "^0.9.0"
+  },
+  "dependencies": {
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "rect": "^1.2.1"
+  }
+}
